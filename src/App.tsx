@@ -1,15 +1,19 @@
 import {
   Avatar,
   FlexBox,
-  FlexBoxAlignItems,
   FlexBoxDirection,
-  FlexBoxJustifyContent,
-  Input,
   InputPropTypes,
   Label,
-  Link,
-  LinkDesign,
-  ShellBar
+  Panel,
+  ShellBar,
+  SideNavigation,
+  SideNavigationItem,
+  Table,
+  TableCell,
+  TableColumn,
+  TableRow,
+  Text,
+  Title
 } from '@ui5/webcomponents-react';
 import { useState } from 'react';
 
@@ -22,19 +26,95 @@ function App() {
     <>
       <ShellBar
         logo={<img src="/vite.svg" alt={'Vite Logo'} />}
-        primaryTitle="UI5 Web Components for React Template"
+        primaryTitle="NEXT Gateway Administration"
         profile={<Avatar initials={'UI5'} />}
       />
       <FlexBox
-        direction={FlexBoxDirection.Column}
-        justifyContent={FlexBoxJustifyContent.Center}
-        alignItems={FlexBoxAlignItems.Center}
-      >
-        <Link href="https://sap.github.io/ui5-webcomponents-react/" target="_blank" design={LinkDesign.Emphasized}>
-          Getting Started with UI5 Web Component for React
-        </Link>
-        <Input placeholder="Hello World" onInput={handleInput} value={inputVal} />
-        <Label>{inputVal}</Label>
+        direction={FlexBoxDirection.Row}>
+
+        <SideNavigation>
+          <SideNavigationItem
+            icon="home"
+            text="Home"
+          />
+          <SideNavigationItem
+            expanded
+            icon="group"
+            text="Proxy"
+          />
+
+        </SideNavigation>
+
+        <Panel>
+          <Title level="H3">
+            Basic Panel
+          </Title>
+
+          <Table
+            columns={<><TableColumn style={{ width: '12rem' }}><Label>Product</Label></TableColumn><TableColumn minWidth={800} popinText="Supplier"><Label>Supplier</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Dimensions"><Label>Dimensions</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Weight"><Label>Weight</Label></TableColumn><TableColumn><Label>Price</Label></TableColumn></>}
+            onLoadMore={function Ta() { }}
+            onPopinChange={function Ta() { }}
+            onRowClick={function Ta() { }}
+            onSelectionChange={function Ta() { }}
+          >
+            <TableRow>
+              <TableCell>
+                <Label>
+                  Notebook Basic
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  Very Best Screens
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  30 x 18 x 3cm
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  4.2KG
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  956EUR
+                </Label>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Label>
+                  Notebook Basic 17HT-1001
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  Very Best Screens
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  29 x 17 x 3.1cm
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  4.5KG
+                </Label>
+              </TableCell>
+              <TableCell>
+                <Label>
+                  1249EUR
+                </Label>
+              </TableCell>
+            </TableRow>
+          </Table>
+
+        </Panel>
+
       </FlexBox>
     </>
   );
