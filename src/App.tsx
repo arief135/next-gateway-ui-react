@@ -1,9 +1,18 @@
 import {
   Avatar,
+  Badge,
+  Breadcrumbs,
+  BreadcrumbsItem,
+  Button,
+  DynamicPage,
+  DynamicPageHeader,
+  DynamicPageTitle,
   FlexBox,
   FlexBoxDirection,
   InputPropTypes,
   Label,
+  MessageStrip,
+  ObjectStatus,
   Panel,
   ShellBar,
   SideNavigation,
@@ -33,6 +42,7 @@ function App() {
         direction={FlexBoxDirection.Row}>
 
         <SideNavigation>
+
           <SideNavigationItem
             icon="home"
             text="Home"
@@ -45,10 +55,9 @@ function App() {
 
         </SideNavigation>
 
-        <Panel>
-          <Title level="H3">
-            Basic Panel
-          </Title>
+        <DynamicPage
+          headerTitle={<DynamicPageTitle actions={<><Button design="Emphasized">Create</Button></>} header={<Title>Proxies</Title>} ></DynamicPageTitle>}
+        >
 
           <Table
             columns={<><TableColumn style={{ width: '12rem' }}><Label>Product</Label></TableColumn><TableColumn minWidth={800} popinText="Supplier"><Label>Supplier</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Dimensions"><Label>Dimensions</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Weight"><Label>Weight</Label></TableColumn><TableColumn><Label>Price</Label></TableColumn></>}
@@ -113,7 +122,7 @@ function App() {
             </TableRow>
           </Table>
 
-        </Panel>
+        </DynamicPage>
 
       </FlexBox>
     </>
