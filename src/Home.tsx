@@ -15,8 +15,17 @@ import {
     Avatar,
     ShellBar
 } from "@ui5/webcomponents-react";
+import { useToken } from "./Auth";
+import { Navigate, redirect } from "react-router-dom";
 
 export default function Home() {
+
+    const { token, setToken } = useToken()
+
+    if (!token) {
+        return <Navigate to="/Login" />
+    }
+
     return (
         <>
             <ShellBar

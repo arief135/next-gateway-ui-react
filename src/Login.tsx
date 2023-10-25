@@ -3,6 +3,7 @@ import "@ui5/webcomponents-icons/dist/account.js"
 import "@ui5/webcomponents-icons/dist/key.js"
 
 export default function Login() {
+
     return (
         <FlexBox
             direction={FlexBoxDirection.Column}
@@ -11,16 +12,20 @@ export default function Login() {
             style={{ height: '600px' }}
         >
 
-            <Title>Login</Title>
+            <Title style={{marginBottom: '30px'}}>Sign In</Title>
             <Input
+                style={{marginBottom: '10px'}}
                 icon={<Icon name="account" />}
                 placeholder="Username"
             />
             <Input
+                style={{marginBottom: '10px'}}
                 icon={<Icon name="key" />}
                 placeholder="Password"
                 type="Password"
             />
+
+            <Button design="Emphasized" style={{ width: '210px' }}>Login</Button>
 
         </FlexBox>
     )
