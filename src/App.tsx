@@ -39,9 +39,10 @@ function App() {
         profile={<Avatar initials={'UI5'} />}
       />
       <FlexBox
+        style={{height:'100%'}}
         direction={FlexBoxDirection.Row}>
 
-        <SideNavigation>
+        <SideNavigation style={{height:'100%'}}>
 
           <SideNavigationItem
             icon="home"
