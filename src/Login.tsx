@@ -5,11 +5,14 @@ import { useMutation } from "react-query";
 import { useState } from "react";
 import axios from "axios";
 import { useToken } from "./Auth";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate, useNavigation } from "react-router-dom";
 
 export default function Login() {
 
+    const nav = useNavigate()
+
     const { token, setToken } = useToken()
+
     if (token) {
         return <Navigate to="/" />
     }
@@ -23,7 +26,7 @@ export default function Login() {
 
     if (loginMutation.isSuccess) {
         setToken(loginMutation.data.data.access_token)
-        window.location.href = '/'
+        return nav('/')
     }
 
     const onLoginClick = () => {
