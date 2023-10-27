@@ -1,34 +1,33 @@
 import { Button, FlexBox, FlexBoxDirection, Icon, Input, Title } from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-icons/dist/account.js"
 import "@ui5/webcomponents-icons/dist/key.js"
-import { useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useState } from "react";
+import axios from "axios";
+import { useToken } from "./Auth";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
 
-    const { data, refetch } = useQuery(
-        'login',
-        () => {
-            const username = ''
-            const password = ''
+    const { token, setToken } = useToken()
+    if (token) {
+        return <Navigate to="/" />
+    }
 
-            return fetch('/api/auth/login',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        'username': username,
-                        'password': password
-                    })
-                })
-                .then(res => res.json())
-        },
-        { enabled: false }
-    )
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const loginMutation = useMutation({
+        mutationFn: (loginData: { username: string, password: string }) => axios.post('/api/auth/login', loginData)
+    })
+
+    if (loginMutation.isSuccess) {
+        setToken(loginMutation.data.data.access_token)
+        window.location.href = '/'
+    }
 
     const onLoginClick = () => {
-        refetch()
-        console.log(data)
+        loginMutation.mutate({ username, password })
     }
 
     return (
@@ -44,13 +43,16 @@ export default function Login() {
                 style={{ marginBottom: '10px' }}
                 icon={<Icon name="account" />}
                 placeholder="Username"
-                value=""
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
             />
             <Input
                 style={{ marginBottom: '10px' }}
                 icon={<Icon name="key" />}
                 placeholder="Password"
                 type="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
             />
 
             <Button design="Emphasized" style={{ width: '210px' }} onClick={onLoginClick}>Login</Button>
