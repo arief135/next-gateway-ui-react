@@ -16,14 +16,20 @@ import {
     ShellBar
 } from "@ui5/webcomponents-react";
 import { useToken } from "./Auth";
-import { Navigate, redirect } from "react-router-dom";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
 
 export default function Home() {
 
-    const { token, setToken } = useToken()
+    const { token, clearToken } = useToken()
+    const nav = useNavigate()
 
     if (!token) {
         return <Navigate to="/Login" />
+    }
+
+    const logoffFn = () => {
+        clearToken()
+        nav('/Login')
     }
 
     return (
@@ -35,10 +41,11 @@ export default function Home() {
             />
 
             <FlexBox
-                style={{ height: '100%' }}
                 direction={FlexBoxDirection.Row}>
 
-                <SideNavigation style={{ height: '100%' }}>
+                <SideNavigation 
+                    fixedItems={<><SideNavigationItem icon="history" text="Logoff" onClick={logoffFn} /></>}
+                    >
 
                     <SideNavigationItem
                         icon="home"

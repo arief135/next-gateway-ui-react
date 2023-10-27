@@ -1,6 +1,3 @@
-import {
-  Avatar,
-  ShellBar} from '@ui5/webcomponents-react';
 import { createContext, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Home';

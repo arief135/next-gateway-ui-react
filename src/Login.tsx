@@ -26,7 +26,7 @@ export default function Login() {
 
     if (loginMutation.isSuccess) {
         setToken(loginMutation.data.data.access_token)
-        return nav('/')
+        nav('/')
     }
 
     const onLoginClick = () => {
