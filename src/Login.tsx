@@ -1,4 +1,4 @@
-import { Button, FlexBox, FlexBoxDirection, Icon, Input, Title } from "@ui5/webcomponents-react";
+import { Button, FlexBox, FlexBoxDirection, Icon, Input, Title, Toast } from "@ui5/webcomponents-react";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { useToken } from "./Auth";
@@ -6,40 +6,40 @@ import { Navigate, useNavigate } from "react-router-dom";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents-icons/dist/account.js"
 import "@ui5/webcomponents-icons/dist/key.js"
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element";
+import { useRef } from "react";
 
 export default function Login() {
 
-    const nav = useNavigate()
-
     const { token, setToken } = useToken()
+    const toast = useRef(null)
 
     if (token) {
         return <Navigate to="/" />
     }
 
-    const loginMutation = useMutation({
-        mutationFn: (loginData: { username: string, password: string }) => axios.post('/api/auth/login', loginData)
-    })
-
-    if (loginMutation.isSuccess) {
-        setToken(loginMutation.data.data.access_token)
-        nav('/')
-    }
-
-    const onLoginClick = (e) => {
+    const onLogin = async (e) => {
         e.preventDefault()
 
         const u = document.getElementById('username') as any
         const p = document.getElementById('password') as any
-        loginMutation.mutate({
-            username: u.value,
-            password: p.value
-        })
+
+        try {
+            const res = await axios.post('/api/auth/login', {
+                username: u.value,
+                password: p.value
+            })
+
+            if (res.data) {
+                setToken(res.data.access_token)
+            }
+        } catch (error) {
+            toast.current.setHTML(error)
+            toast.current.show()
+        }
     }
 
     return (
-        <form onSubmit={onLoginClick}>
+        <form onSubmit={onLogin}>
             <FlexBox
                 direction={FlexBoxDirection.Column}
                 alignItems="Center"
@@ -62,8 +62,8 @@ export default function Login() {
                     type="Password"
                 />
 
-                <Button design="Emphasized" style={{ width: '210px' }} onClick={onLoginClick}>Login</Button>
-
+                <Button type="Submit" design="Emphasized" style={{ width: '210px' }}>Login</Button>
+                <Toast ref={toast}></Toast>
             </FlexBox>
         </form>
     )
