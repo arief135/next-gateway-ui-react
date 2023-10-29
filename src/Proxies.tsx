@@ -1,109 +1,96 @@
 import {
-    FlexBox,
-    FlexBoxDirection,
-    SideNavigation,
-    SideNavigationItem,
     DynamicPage,
     DynamicPageTitle,
     Button,
     Title,
-    Table,
-    TableColumn,
     Label,
-    TableRow,
-    TableCell
+    Table,
+    TableCell,
+    TableColumn,
+    TableRow
 } from "@ui5/webcomponents-react";
+import { useQuery } from "react-query";
+import { useToken } from "./Auth";
+import { fetchWithToken } from "./Util";
+
+function ProxyTable() {
+
+    const { token } = useToken()
+
+    const query = useQuery({
+        queryKey: 'proxies',
+        queryFn: () => fetchWithToken('/api/proxies', token).then(e => e.json())
+    })
+
+    if (query.isSuccess) {
+        console.log(query.data.data)
+    }
+
+    if (query.isSuccess) {
+        return (
+            <Table
+                columns={
+                    <>
+                        <TableColumn style={{ width: '12rem' }}>
+                            <Label>Name</Label>
+                        </TableColumn>
+                        <TableColumn minWidth={800} popinText="Supplier">
+                            <Label>Endpoint</Label>
+                        </TableColumn>
+                        <TableColumn demandPopin minWidth={600} popinText="Dimensions">
+                            <Label>Target URL</Label></TableColumn>
+                        <TableColumn demandPopin minWidth={600} popinText="Weight">
+                            <Label>Status</Label>
+                        </TableColumn>
+                        <TableColumn>
+                            <Label>Last Modified</Label>
+                        </TableColumn>
+                    </>}
+            >
+                {query.data.data.map(e =>
+                    <TableRow>
+                        <TableCell>
+                            <Label>
+                                {e.name}
+                            </Label>
+                        </TableCell>
+                        <TableCell>
+                            <Label>
+                                {e.endpoint}
+                            </Label>
+                        </TableCell>
+                        <TableCell>
+                            <Label>
+                                {e.targetURL}
+                            </Label>
+                        </TableCell>
+                        <TableCell>
+                            <Label>
+                                {e.status}
+                            </Label>
+                        </TableCell>
+                        <TableCell>
+                            <Label>
+                                {e.name}
+                            </Label>
+                        </TableCell>
+                    </TableRow>
+                )}
+            </Table>
+        )
+    }
+
+}
 
 export default function Proxies() {
+
     return (
-        <FlexBox
-            style={{ height: '100%' }}
-            direction={FlexBoxDirection.Row}>
+        <DynamicPage
+            headerTitle={<DynamicPageTitle actions={<><Button design="Emphasized">Create</Button></>} header={<Title>Proxies</Title>} ></DynamicPageTitle>}
+        >
 
-            <SideNavigation style={{ height: '100%' }}>
+            <ProxyTable />
 
-                <SideNavigationItem
-                    icon="home"
-                    text="Home"
-                />
-                <SideNavigationItem
-                    expanded
-                    icon="group"
-                    text="Proxy"
-                />
-
-            </SideNavigation>
-
-            <DynamicPage
-                headerTitle={<DynamicPageTitle actions={<><Button design="Emphasized">Create</Button></>} header={<Title>Proxies</Title>} ></DynamicPageTitle>}
-            >
-
-                <Table
-                    columns={<><TableColumn style={{ width: '12rem' }}><Label>Product</Label></TableColumn><TableColumn minWidth={800} popinText="Supplier"><Label>Supplier</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Dimensions"><Label>Dimensions</Label></TableColumn><TableColumn demandPopin minWidth={600} popinText="Weight"><Label>Weight</Label></TableColumn><TableColumn><Label>Price</Label></TableColumn></>}
-                    onLoadMore={function Ta() { }}
-                    onPopinChange={function Ta() { }}
-                    onRowClick={function Ta() { }}
-                    onSelectionChange={function Ta() { }}
-                >
-                    <TableRow>
-                        <TableCell>
-                            <Label>
-                                Notebook Basic
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                Very Best Screens
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                30 x 18 x 3cm
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                4.2KG
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                956EUR
-                            </Label>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>
-                            <Label>
-                                Notebook Basic 17HT-1001
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                Very Best Screens
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                29 x 17 x 3.1cm
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                4.5KG
-                            </Label>
-                        </TableCell>
-                        <TableCell>
-                            <Label>
-                                1249EUR
-                            </Label>
-                        </TableCell>
-                    </TableRow>
-                </Table>
-
-            </DynamicPage>
-
-        </FlexBox>
-
+        </DynamicPage>
     )
 }
