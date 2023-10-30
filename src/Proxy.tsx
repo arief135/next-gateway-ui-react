@@ -146,7 +146,9 @@ function ProxyCreate() {
                     </FormItem>
                 </FormGroup>
 
-                <Button>Test Connection</Button>
+                <FormItem>
+                    <Button>Test Connection</Button>
+                </FormItem>
             </Form>
         </div>
     )
