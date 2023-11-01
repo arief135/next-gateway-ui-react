@@ -25,6 +25,7 @@ import { useQuery } from "react-query";
 import { useToken } from "./Auth";
 import { fetchWithToken } from "./Util";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function ProxyTable() {
 
@@ -101,6 +102,32 @@ function ProxyCreate() {
         }
     }
 
+    const [readyToSave, setReadyToSave] = useState(false)
+
+    const submitForm = (e) => {
+        e.preventDefault()
+    }
+
+    const testConnection = (e) => {
+        const formData = getFormData()
+        console.log(formData)
+    }
+
+    const getElement = (id) => document.getElementById(id) as any
+
+    const getFormData = () => {
+        const name = getElement('name').value
+        const endpoint = getElement('endpoint').value
+        const targetURL = getElement('targetURL').value
+        const credential = getElement('credential').selectedOption.value
+        const credentialName = getElement('credentialName').value
+        const credentialPassword = getElement('credentialPassword').value
+
+        return {
+            name, endpoint, targetURL, credential, credentialName, credentialPassword
+        }
+    }
+
     return (
         <div style={{ width: '100%', margin: '0 40px' }}>
             <Breadcrumbs onItemClick={breadcrumbClick}>
@@ -112,26 +139,28 @@ function ProxyCreate() {
                 </BreadcrumbsItem>
             </Breadcrumbs>
             <div style={{ marginBottom: '30px' }}></div>
+
             <Form
-                backgroundDesign="Transparent"
+                backgroundDesign="Solid"
                 style={{
                     alignItems: 'left'
                 }}
                 titleText="Create New Proxy"
                 columnsXL={1}
+                onSubmit={submitForm}
             >
                 <FormItem label="Name">
-                    <Input />
+                    <Input id='name' />
                 </FormItem>
                 <FormItem label="Endpoint">
-                    <Input />
+                    <Input id='endpoint' />
                 </FormItem>
                 <FormItem label='Target URL'>
-                    <Input />
+                    <Input id='targetURL' />
                 </FormItem>
                 <FormItem label="Credential" >
-                    <Select>
-                        <Option>
+                    <Select id="credential">
+                        <Option value="1">
                             BASIC Auth
                         </Option>
                     </Select>
@@ -139,16 +168,19 @@ function ProxyCreate() {
 
                 <FormGroup titleText="Credential Details">
                     <FormItem label="User Name">
-                        <Input />
+                        <Input id='credentialName' />
                     </FormItem>
                     <FormItem label='Paswords'>
-                        <Input />
+                        <Input type="Password" id='credentialPassword' />
                     </FormItem>
                 </FormGroup>
 
+                <Button style={{ width: '120px' }} onClick={testConnection}>Test Connection</Button>
+
                 <FormItem>
-                    <Button>Test Connection</Button>
+                    <Button type="Submit" style={{ width: '120px' }} disabled={!readyToSave}>Save</Button>
                 </FormItem>
+
             </Form>
         </div>
     )
