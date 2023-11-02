@@ -19,13 +19,15 @@ import {
     Text,
     TextArea,
     Breadcrumbs,
-    BreadcrumbsItem
+    BreadcrumbsItem,
+    Toast
 } from "@ui5/webcomponents-react";
 import { useQuery } from "react-query";
 import { useToken } from "./Auth";
 import { fetchWithToken } from "./Util";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import axios from "axios";
 
 function ProxyTable() {
 
@@ -102,15 +104,42 @@ function ProxyCreate() {
         }
     }
 
+    const endpointPrefix = '/api/run/'
     const [readyToSave, setReadyToSave] = useState(false)
+    const [endpoint, setEndpoint] = useState(endpointPrefix)
 
     const submitForm = (e) => {
         e.preventDefault()
     }
 
-    const testConnection = (e) => {
+    const testConnection = async (e) => {
         const formData = getFormData()
+
         console.log(formData)
+
+        const targetURL = formData.targetURL
+        const username = formData.credentialName
+        const password = formData.credentialPassword
+        const ignoreCert = true
+
+        try {
+
+            const res = await axios.post('/api/run/test_connection', {
+                targetURL,
+                username,
+                password,
+                ignoreCert
+            })
+
+            toast.current.setHTML(res.statusText)
+
+            setReadyToSave(true)
+
+        } catch (err) {
+            toast.current.setHTML(err)
+            setReadyToSave(false)
+        }
+        toast.current.show()
     }
 
     const getElement = (id) => document.getElementById(id) as any
@@ -127,6 +156,12 @@ function ProxyCreate() {
             name, endpoint, targetURL, credential, credentialName, credentialPassword
         }
     }
+
+    const onNameChanged = (val) => {
+        setEndpoint(endpointPrefix + val)
+    }
+
+    const toast = useRef(null)
 
     return (
         <div style={{ width: '100%', margin: '0 40px' }}>
@@ -150,10 +185,12 @@ function ProxyCreate() {
                 onSubmit={submitForm}
             >
                 <FormItem label="Name">
-                    <Input id='name' />
+                    <Input
+                        id='name'
+                        onInput={(e) => onNameChanged(e.target.value)} />
                 </FormItem>
                 <FormItem label="Endpoint">
-                    <Input id='endpoint' />
+                    <Input id='endpoint' readonly={true} value={endpoint} />
                 </FormItem>
                 <FormItem label='Target URL'>
                     <Input id='targetURL' />
@@ -161,7 +198,7 @@ function ProxyCreate() {
                 <FormItem label="Credential" >
                     <Select id="credential">
                         <Option value="1">
-                            BASIC Auth
+                            Basic Auth
                         </Option>
                     </Select>
                 </FormItem>
@@ -182,6 +219,8 @@ function ProxyCreate() {
                 </FormItem>
 
             </Form>
+
+            <Toast ref={toast}></Toast>
         </div>
     )
 }
