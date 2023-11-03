@@ -22,12 +22,12 @@ import {
     BreadcrumbsItem,
     Toast
 } from "@ui5/webcomponents-react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useToken } from "./Auth";
-import { fetchWithToken } from "./Util";
-import { useNavigate } from "react-router-dom";
+import { fetchWithToken, postWithToken } from "./Util";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 function ProxyTable() {
 
@@ -107,15 +107,10 @@ function ProxyCreate() {
     const endpointPrefix = '/api/run/'
     const [readyToSave, setReadyToSave] = useState(false)
     const [endpoint, setEndpoint] = useState(endpointPrefix)
-
-    const submitForm = (e) => {
-        e.preventDefault()
-    }
+    const { token } = useToken()
 
     const testConnection = async (e) => {
         const formData = getFormData()
-
-        console.log(formData)
 
         const targetURL = formData.targetURL
         const username = formData.credentialName
@@ -123,13 +118,21 @@ function ProxyCreate() {
         const ignoreCert = true
 
         try {
-
-            const res = await axios.post('/api/run/test_connection', {
+            const res = await axios.create().post('/api/run/test_connection', {
                 targetURL,
                 username,
                 password,
                 ignoreCert
             })
+
+            // const res = await new Axios().post('/api/run/test_connection', {
+            //     targetURL,
+            //     username,
+            //     password,
+            //     ignoreCert
+            // })
+
+            console.log(res)
 
             toast.current.setHTML(res.statusText)
 
@@ -162,6 +165,46 @@ function ProxyCreate() {
     }
 
     const toast = useRef(null)
+
+    const proxyMutation = useMutation({
+        mutationFn: (data: any) => {
+            return postWithToken('/api/proxies', token, data)
+        }
+    })
+
+    const submitForm = (e) => {
+        e.preventDefault()
+
+        if (!readyToSave) {
+            return
+        }
+
+        const formData = getFormData()
+        proxyMutation.mutate({
+            name: formData.name,
+            alias: formData.name,
+            targetURL: formData.targetURL,
+            status: 'ACTIVE',
+            credentialInfo: {
+                credentialType: 1
+            },
+            credentialProperties: [
+                {
+                    name: "USERNAME",
+                    value: formData.credentialName
+                },
+                {
+                    name: "PASSWORD",
+                    value
+                        : formData.credentialPassword
+                }
+            ]
+        })
+    }
+
+    if (proxyMutation.isSuccess) {
+        return <Navigate to='/proxies' />
+    }
 
     return (
         <div style={{ width: '100%', margin: '0 40px' }}>
