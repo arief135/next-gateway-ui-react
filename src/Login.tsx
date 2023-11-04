@@ -1,8 +1,7 @@
 import { Button, FlexBox, FlexBoxDirection, Icon, Input, Title, Toast } from "@ui5/webcomponents-react";
-import { useMutation } from "react-query";
 import axios from "axios";
 import { useToken } from "./Auth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import "@ui5/webcomponents/dist/features/InputElementsFormSupport.js"
 import "@ui5/webcomponents-icons/dist/account.js"
 import "@ui5/webcomponents-icons/dist/key.js"
@@ -33,7 +32,7 @@ export default function Login() {
                 setToken(res.data.access_token)
             }
         } catch (error) {
-            toast.current.setHTML(error)
+            toast.current.innerHTML = error
             toast.current.show()
         }
     }
