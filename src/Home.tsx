@@ -25,14 +25,14 @@ export default function Home() {
     }
 
     return (
-        <>
+        <FlexBox fitContainer={true} direction={FlexBoxDirection.Column}>
             <ShellBar
                 logo={<img src="https://sap.github.io/ui5-webcomponents/assets/images/sap-logo-svg.svg" alt={'SAP Logo'} />}
                 primaryTitle="NEXT Gateway Administration"
                 profile={<Avatar initials={'UI5'} />}
             />
-
             <FlexBox
+                fitContainer={true}
                 direction={FlexBoxDirection.Row}>
 
                 <SideNavigation
@@ -54,6 +54,6 @@ export default function Home() {
                 <Outlet />
 
             </FlexBox>
-        </>
+        </FlexBox>
     )
 }
