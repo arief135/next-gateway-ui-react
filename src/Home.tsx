@@ -40,13 +40,19 @@ export default function Home() {
                 >
 
                     <SideNavigationItem
-                        icon="home"
-                        text="Home"
+                        expanded
+                        icon="group"
+                        text="Proxy"
                     />
                     <SideNavigationItem
                         expanded
                         icon="group"
-                        text="Proxy"
+                        text="Monitor"
+                    />
+                    <SideNavigationItem
+                        expanded
+                        icon="group"
+                        text="Users"
                     />
 
                 </SideNavigation>
