@@ -35,7 +35,7 @@ function ProxyTable() {
 
     const query = useQuery({
         queryKey: 'proxies',
-        queryFn: () => fetchWithToken('/api/proxies', token).then(e => e.json())
+        queryFn: () => fetchWithToken('/api/proxies', token as string).then(e => e.json())
     })
 
     if (query.isSuccess) {
@@ -59,7 +59,7 @@ function ProxyTable() {
                         </TableColumn>
                     </>}
             >
-                {query.data.data.map(e =>
+                {query.data.data.map((e: any) =>
                     <TableRow>
                         <TableCell>
                             <Label>
@@ -105,17 +105,18 @@ function ProxyCreate() {
     }
 
     const endpointPrefix = '/api/run/'
-    const [readyToSave, setReadyToSave] = useState(false)
-    const [endpoint, setEndpoint] = useState(endpointPrefix)
+    const [ readyToSave, setReadyToSave ] = useState(false)
+    const [ endpoint, setEndpoint ] = useState(endpointPrefix)
     const { token } = useToken()
 
-    const testConnection = async (e) => {
+    const testConnection = async (e: any) => {
         const formData = getFormData()
 
         const targetURL = formData.targetURL
         const username = formData.credentialName
         const password = formData.credentialPassword
         const ignoreCert = true
+        const currentToast: any = toast.current
 
         try {
             const res = await axios.create().post('/api/run/test_connection', {
@@ -133,19 +134,24 @@ function ProxyCreate() {
             // })
 
             console.log(res)
+            console.log(toast.current)
+            // debugger
 
-            toast.current.setHTML(res.statusText)
+            // toast.current.setHTML(res.statusText)
+            currentToast.innerHTML = res.statusText
 
             setReadyToSave(true)
 
         } catch (err) {
-            toast.current.setHTML(err)
+            // toast.current.setHTML(err)
+            currentToast.innerHTML = err
             setReadyToSave(false)
         }
-        toast.current.show()
+
+        currentToast.show()
     }
 
-    const getElement = (id) => document.getElementById(id) as any
+    const getElement = (id: string) => document.getElementById(id) as any
 
     const getFormData = () => {
         const name = getElement('name').value
@@ -160,7 +166,7 @@ function ProxyCreate() {
         }
     }
 
-    const onNameChanged = (val) => {
+    const onNameChanged = (val: string) => {
         setEndpoint(endpointPrefix + val)
     }
 
@@ -168,11 +174,11 @@ function ProxyCreate() {
 
     const proxyMutation = useMutation({
         mutationFn: (data: any) => {
-            return postWithToken('/api/proxies', token, data)
+            return postWithToken('/api/proxies', token as string, data)
         }
     })
 
-    const submitForm = (e) => {
+    const submitForm = (e: any) => {
         e.preventDefault()
 
         if (!readyToSave) {
@@ -230,7 +236,7 @@ function ProxyCreate() {
                 <FormItem label="Name">
                     <Input
                         id='name'
-                        onInput={(e) => onNameChanged(e.target.value)} />
+                        onInput={(e) => onNameChanged(e.target.value as string)} />
                 </FormItem>
                 <FormItem label="Endpoint">
                     <Input id='endpoint' readonly={true} value={endpoint} />
