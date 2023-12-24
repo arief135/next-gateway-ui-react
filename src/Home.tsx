@@ -4,10 +4,17 @@ import {
     SideNavigation,
     SideNavigationItem,
     Avatar,
-    ShellBar
-} from "@ui5/webcomponents-react";
-import { useToken } from "./Auth";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+    ShellBar,
+    Ui5CustomEvent,
+    SideNavigationDomRef
+} from "@ui5/webcomponents-react"
+import { useToken } from "./Auth"
+import { Navigate, Outlet, useNavigate } from "react-router-dom"
+import "@ui5/webcomponents-icons/dist/log.js"
+import "@ui5/webcomponents-icons/dist/internet-browser.js"
+import "@ui5/webcomponents-icons/dist/performance.js"
+import "@ui5/webcomponents-icons/dist/user-edit.js"
+import { SideNavigationSelectionChangeEventDetail } from "@ui5/webcomponents-fiori/dist/SideNavigation"
 
 
 export default function Home() {
@@ -21,7 +28,25 @@ export default function Home() {
 
     const logoffFn = () => {
         clearToken()
-        nav('/Login')
+        nav('/login')
+    }
+
+    const selectItem = (e: Ui5CustomEvent<SideNavigationDomRef, SideNavigationSelectionChangeEventDetail>) => {
+        switch (e.target.id) {
+            case 'proxy':
+                break;
+
+            case 'monitor':
+                break;
+
+            case 'users':
+                nav('/users')
+                break;
+
+            default:
+                break;
+        }
+        0
     }
 
     return (
@@ -36,23 +61,27 @@ export default function Home() {
                 direction={FlexBoxDirection.Row}>
 
                 <SideNavigation
-                    fixedItems={<><SideNavigationItem icon="history" text="Logoff" onClick={logoffFn} /></>}
+                    fixedItems={<><SideNavigationItem icon="log" text="Logoff" onClick={logoffFn} /></>}
                 >
 
                     <SideNavigationItem
                         expanded
-                        icon="group"
+                        id="proxy"
+                        icon="internet-browser"
                         text="Proxy"
                     />
                     <SideNavigationItem
                         expanded
-                        icon="group"
+                        id="monitor"
+                        icon="performance"
                         text="Monitor"
                     />
                     <SideNavigationItem
                         expanded
-                        icon="group"
+                        id="users"
+                        icon="user-edit"
                         text="Users"
+                        href='/users'
                     />
 
                 </SideNavigation>

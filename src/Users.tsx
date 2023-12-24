@@ -9,11 +9,15 @@ import {
     TableColumn,
     TableRow,
     FormGroup,
+    CheckBox,
     Form,
     FormItem,
     Input,
+    Link,
     Select,
     Option,
+    Text,
+    TextArea,
     Breadcrumbs,
     BreadcrumbsItem,
     Toast
@@ -23,7 +27,7 @@ import { useToken } from "./Auth";
 import { fetchWithToken, postWithToken } from "./Util";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 function ProxyTable() {
 
@@ -56,7 +60,7 @@ function ProxyTable() {
                     </>}
             >
                 {query.data.data.map((e: any) =>
-                    <TableRow key={e.uuid}>
+                    <TableRow>
                         <TableCell>
                             <Label>
                                 {e.name}
@@ -90,7 +94,7 @@ function ProxyTable() {
 
 }
 
-function ProxyCreate() {
+function UserCreate() {
 
     const navigate = useNavigate()
 
@@ -270,7 +274,7 @@ function ProxyCreate() {
     )
 }
 
-function ProxyDisplay() {
+function UserDisplay() {
 
     const navigate = useNavigate()
 
@@ -293,20 +297,16 @@ function ProxyDisplay() {
     )
 }
 
-interface ProxyProp {
+interface UserProp {
     mode: 'CRE' | 'DIS' | 'UPD'
 }
 
-export default function Proxies({ mode = 'DIS' }: ProxyProp) {
-
-    const navigate = useNavigate()
-
-    let content
+export default function Users({ mode = 'DIS' }: UserProp) {
     switch (mode) {
         case 'CRE':
-            return <ProxyCreate />
+            return <UserCreate />
 
         default:
-            return <ProxyDisplay />
+            return <UserDisplay />
     }
 }

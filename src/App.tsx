@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import Proxies from './Proxy';
+import Users from './Users';
 
 const defaultTheme = "sap_horizon";
 export const ThemeContext = createContext(defaultTheme);
@@ -25,8 +26,9 @@ function App() {
           <Route path="/" element={<Navigate to='/proxies' />} />
           <Route path="/proxies" element={<Proxies mode='DIS' />} />
           <Route path="/proxies/create" element={<Proxies mode='CRE' />} />
+          <Route path="/users" element={<Users mode='DIS' />} />
         </Route>
-        <Route path="/Login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </ThemeContext.Provider>
   );
