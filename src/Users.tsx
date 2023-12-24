@@ -9,15 +9,11 @@ import {
     TableColumn,
     TableRow,
     FormGroup,
-    CheckBox,
     Form,
     FormItem,
     Input,
-    Link,
     Select,
     Option,
-    Text,
-    TextArea,
     Breadcrumbs,
     BreadcrumbsItem,
     Toast
@@ -27,15 +23,15 @@ import { useToken } from "./Auth";
 import { fetchWithToken, postWithToken } from "./Util";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
-function ProxyTable() {
+function UserTable() {
 
     const { token } = useToken()
 
     const query = useQuery({
-        queryKey: 'proxies',
-        queryFn: () => fetchWithToken('/api/proxies', token as string).then(e => e.json())
+        queryKey: 'users',
+        queryFn: () => fetchWithToken('/api/users', token as string).then(e => e.json())
     })
 
     if (query.isSuccess) {
@@ -47,43 +43,43 @@ function ProxyTable() {
                             <Label>Name</Label>
                         </TableColumn>
                         <TableColumn minWidth={800} popinText="Supplier">
-                            <Label>Endpoint</Label>
+                            <Label>Username</Label>
                         </TableColumn>
                         <TableColumn demandPopin minWidth={600} popinText="Dimensions">
-                            <Label>Target URL</Label></TableColumn>
+                            <Label>Email</Label></TableColumn>
                         <TableColumn demandPopin minWidth={600} popinText="Weight">
-                            <Label>Status</Label>
+                            <Label>Active</Label>
                         </TableColumn>
                         <TableColumn>
-                            <Label>Last Modified</Label>
+                            <Label>Last Logged In</Label>
                         </TableColumn>
                     </>}
             >
                 {query.data.data.map((e: any) =>
-                    <TableRow>
+                    <TableRow key={e.username}>
                         <TableCell>
                             <Label>
-                                {e.name}
+                                {e.firstName + ' ' + e.lastName}
                             </Label>
                         </TableCell>
                         <TableCell>
                             <Label>
-                                {e.endpoint}
+                                {e.username}
                             </Label>
                         </TableCell>
                         <TableCell>
                             <Label>
-                                {e.targetURL}
+                                {e.email}
                             </Label>
                         </TableCell>
                         <TableCell>
                             <Label>
-                                {e.status}
+                                {e.active}
                             </Label>
                         </TableCell>
                         <TableCell>
                             <Label>
-                                {e.name}
+                                {e.lastLoggedIn}
                             </Label>
                         </TableCell>
                     </TableRow>
@@ -286,12 +282,12 @@ function UserDisplay() {
                         <>
                             <Button design="Emphasized" onClick={() => navigate('/proxies/create')}>Create</Button>
                         </>}
-                    header={<Title>Proxies</Title>} >
+                    header={<Title>Users</Title>} >
 
                 </DynamicPageTitle>}
         >
 
-            <ProxyTable />
+            <UserTable />
 
         </DynamicPage>
     )

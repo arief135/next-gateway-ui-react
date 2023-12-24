@@ -23,7 +23,7 @@ export default function Home() {
     const nav = useNavigate()
 
     if (!token) {
-        return <Navigate to="/Login" />
+        return <Navigate to="/login" />
     }
 
     const logoffFn = () => {
@@ -32,11 +32,13 @@ export default function Home() {
     }
 
     const selectItem = (e: Ui5CustomEvent<SideNavigationDomRef, SideNavigationSelectionChangeEventDetail>) => {
-        switch (e.target.id) {
+        switch (e.detail.item.id) {
             case 'proxy':
+                nav('/proxies')
                 break;
 
             case 'monitor':
+                // nav('/monitor')
                 break;
 
             case 'users':
@@ -46,7 +48,6 @@ export default function Home() {
             default:
                 break;
         }
-        0
     }
 
     return (
@@ -62,6 +63,7 @@ export default function Home() {
 
                 <SideNavigation
                     fixedItems={<><SideNavigationItem icon="log" text="Logoff" onClick={logoffFn} /></>}
+                    onSelectionChange={selectItem}
                 >
 
                     <SideNavigationItem
@@ -81,7 +83,6 @@ export default function Home() {
                         id="users"
                         icon="user-edit"
                         text="Users"
-                        href='/users'
                     />
 
                 </SideNavigation>
