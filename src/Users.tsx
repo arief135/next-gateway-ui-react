@@ -285,6 +285,7 @@ function UserDisplay() {
                     header={<Title>Users</Title>} >
 
                 </DynamicPageTitle>}
+            showHideHeaderButton={false}
         >
 
             <UserTable />

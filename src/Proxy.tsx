@@ -285,6 +285,8 @@ function ProxyDisplay() {
                     header={<Title>Proxies</Title>} >
 
                 </DynamicPageTitle>}
+            
+            showHideHeaderButton={false}
         >
 
             <ProxyTable />
