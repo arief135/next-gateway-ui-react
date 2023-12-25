@@ -27,6 +27,7 @@ function App() {
           <Route path="/proxies" element={<Proxies mode='DIS' />} />
           <Route path="/proxies/create" element={<Proxies mode='CRE' />} />
           <Route path="/users" element={<Users mode='DIS' />} />
+          <Route path="/users/create" element={<Users mode='CRE' />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
