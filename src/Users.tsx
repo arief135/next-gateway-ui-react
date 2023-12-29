@@ -8,7 +8,6 @@ import {
     TableCell,
     TableColumn,
     TableRow,
-    FormGroup,
     Form,
     FormItem,
     Input,
@@ -16,23 +15,35 @@ import {
     Option,
     Breadcrumbs,
     BreadcrumbsItem,
-    Toast
+    Toast,
+    Ui5CustomEvent,
+    TableDomRef
 } from "@ui5/webcomponents-react";
 import { useMutation, useQuery } from "react-query";
 import { useToken } from "./Auth";
 import { fetchWithToken, postWithToken } from "./Util";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
-import axios from "axios";
+import { useRef } from "react";
+import { TableSelectionChangeEventDetail } from "@ui5/webcomponents/dist/Table";
 
 function UserTable() {
 
     const { token } = useToken()
+    const nav = useNavigate()
 
     const query = useQuery({
         queryKey: 'users',
         queryFn: () => fetchWithToken('/api/users', token as string).then(e => e.json())
     })
+
+    const selectionChange = (e: Ui5CustomEvent<TableDomRef, TableSelectionChangeEventDetail>) => {
+        if (e.detail.selectedRows.length == 1) {
+            const selectedRow = e.detail.selectedRows[ 0 ]
+            const dataKey = selectedRow.getAttribute('data-key')
+            nav('/users/' + dataKey)
+        }
+    }
+
 
     if (query.isSuccess) {
         return (
@@ -54,9 +65,11 @@ function UserTable() {
                             <Label>Last Logged In</Label>
                         </TableColumn>
                     </>}
+                mode="SingleSelect"
+                onSelectionChange={selectionChange}
             >
                 {query.data.data.map((e: any) =>
-                    <TableRow key={e.username}>
+                    <TableRow key={e.username} data-key={e.username}>
                         <TableCell>
                             <Label>
                                 {e.firstName + ' ' + e.lastName}
