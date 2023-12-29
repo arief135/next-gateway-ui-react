@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import Proxies from './Proxy';
-import Users from './Users';
+import { CRUD, CRUDMode } from './components/Base';
+import { UserComponent } from './Users';
 
 const defaultTheme = "sap_horizon";
 export const ThemeContext = createContext(defaultTheme);
@@ -26,9 +27,9 @@ function App() {
           <Route path="/" element={<Navigate to='/proxies' />} />
           <Route path="/proxies" element={<Proxies mode='DIS' />} />
           <Route path="/proxies/create" element={<Proxies mode='CRE' />} />
-          <Route path="/users" element={<Users mode='DIS' />} />
-          <Route path="/users/create" element={<Users mode='CRE' />} />
-          <Route path="/users/:id" element={<Users mode='DIS' />} />
+          <Route path="/users"        element={<CRUD mode={CRUDMode.DIS} cls={UserComponent} />} />
+          <Route path="/users/create" element={<CRUD mode={CRUDMode.CRE} cls={UserComponent} />} />
+          <Route path="/users/:id"    element={<CRUD mode={CRUDMode.UPD} cls={UserComponent} />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
